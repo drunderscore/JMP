@@ -27,6 +27,7 @@ public:
     ~FileStream();
 
     std::vector<uint8_t> read(size_t number_of_bytes) override;
+    void write(std::span<uint8_t> bytes_to_write) override;
     void seek(size_t offset, SeekOrigin seek_origin) override;
     size_t index() const override;
 

@@ -30,6 +30,12 @@ std::vector<uint8_t> FileStream::read(size_t number_of_bytes)
     return std::move(bytes);
 }
 
+void FileStream::write(std::span<uint8_t> bytes_to_write)
+{
+    if (fwrite(bytes_to_write.data(), 1, bytes_to_write.size(), m_file) != bytes_to_write.size())
+        throw std::runtime_error("Failed to fwrite for stream for all bytes requested");
+}
+
 void FileStream::seek(size_t offset, SeekOrigin seek_origin)
 {
     if (fseek(m_file, offset, whence_for_seek_origin(seek_origin)) != 0)

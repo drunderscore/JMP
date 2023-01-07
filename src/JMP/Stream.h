@@ -24,6 +24,7 @@ public:
     };
 
     virtual std::vector<uint8_t> read(size_t number_of_bytes) = 0;
+    virtual void write(std::span<uint8_t> bytes_to_write) = 0;
     virtual void seek(size_t offset, SeekOrigin) = 0;
     virtual size_t index() const = 0;
 
