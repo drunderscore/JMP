@@ -7,6 +7,7 @@
 #pragma once
 
 #include "ScopeGuard.h"
+#include <cstdint>
 #include <span>
 #include <vector>
 

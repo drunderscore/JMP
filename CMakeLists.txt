@@ -4,5 +4,5 @@ project(JMP CXX)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(JMP
-        src/JMP/Dummy.cpp
+        src/JMP/FileStream.cpp
         )
