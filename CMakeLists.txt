@@ -7,3 +7,11 @@ add_library(JMP
         src/JMP/BitStream.cpp
         src/JMP/FileStream.cpp
         )
+
+if (WIN32)
+    target_sources(JMP PRIVATE src/JMP/Platforms/Windows.cpp)
+elseif (UNIX)
+    target_sources(JMP PRIVATE src/JMP/Platforms/Linux.cpp)
+else ()
+    message(FATAL_ERROR "Missing platform implementation")
+endif ()
