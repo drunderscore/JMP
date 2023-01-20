@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 add_library(JMP
         src/JMP/BitStream.cpp
         src/JMP/FileStream.cpp
+        src/JMP/Signature.cpp
         )
 
 if (WIN32)
