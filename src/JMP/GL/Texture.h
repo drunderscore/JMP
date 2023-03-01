@@ -56,6 +56,8 @@ public:
 
     void bind() { glBindTexture(TTarget, m_texture); }
 
+    ModificationContext create_modification_context() { return ModificationContext(*this); }
+
     template<typename Callback>
     void with_bound(Callback callback)
     {
@@ -71,8 +73,6 @@ public:
 
 private:
     explicit Texture(GLuint texture) : m_texture(texture) {}
-
-    ModificationContext create_modification_context() { return ModificationContext(*this); }
 
     GLuint m_texture{};
 };

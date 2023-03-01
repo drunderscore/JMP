@@ -57,6 +57,8 @@ public:
 
     void bind(GLenum target = GL_FRAMEBUFFER) { glBindFramebuffer(target, m_framebuffer); }
 
+    ModificationContext create_modification_context() { return ModificationContext(*this); }
+
     template<typename Callback>
     void with_bound(Callback callback, GLenum target = GL_FRAMEBUFFER)
     {
@@ -77,8 +79,6 @@ public:
 
 private:
     explicit Framebuffer(GLuint framebuffer) : m_framebuffer(framebuffer) {}
-
-    ModificationContext create_modification_context() { return ModificationContext(*this); }
 
     GLuint m_framebuffer{};
 };

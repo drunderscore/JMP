@@ -51,6 +51,8 @@ public:
 
     void bind() { glBindBuffer(TTarget, m_buffer); }
 
+    ModificationContext create_modification_context() { return ModificationContext(*this); }
+
     template<typename Callback>
     void with_bound(Callback callback)
     {
@@ -66,8 +68,6 @@ public:
 
 private:
     explicit Buffer(GLuint buffer) : m_buffer(buffer) {}
-
-    ModificationContext create_modification_context() { return ModificationContext(*this); }
 
     GLuint m_buffer{};
 };
