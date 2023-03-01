@@ -16,23 +16,6 @@ template<GLenum TTarget, GLenum TName>
 class Buffer
 {
 public:
-    class ModificationContext
-    {
-    public:
-        friend class Buffer;
-
-        template<typename T>
-        void set_data(std::span<T> bytes, GLenum usage)
-        {
-            glBufferData(TTarget, bytes.size() * sizeof(T), bytes.data(), usage);
-        }
-
-    private:
-        explicit ModificationContext(Buffer& buffer) : m_buffer(buffer) {}
-
-        Buffer& m_buffer;
-    };
-
     Buffer() { glGenBuffers(1, &m_buffer); }
 
     // Never copy this!
@@ -51,7 +34,11 @@ public:
 
     void bind() { glBindBuffer(TTarget, m_buffer); }
 
-    ModificationContext create_modification_context() { return ModificationContext(*this); }
+    template<typename T>
+    static void set_data(std::span<T> bytes, GLenum usage)
+    {
+        glBufferData(TTarget, bytes.size() * sizeof(T), bytes.data(), usage);
+    }
 
     template<typename Callback>
     void with_bound(Callback callback)
@@ -63,7 +50,7 @@ public:
             [previously_bound_buffer]() { glBindBuffer(TTarget, previously_bound_buffer); }};
 
         bind();
-        callback(create_modification_context());
+        callback();
     }
 
 private:

@@ -15,30 +15,6 @@ namespace JMP::GL
 class Framebuffer
 {
 public:
-    class ModificationContext
-    {
-    public:
-        friend class Framebuffer;
-
-        template<GLenum TTextureName>
-        void attach_texture(GLenum attachment, const Texture<GL_TEXTURE_2D, TTextureName>& texture, GLint level,
-                            GLenum target = GL_FRAMEBUFFER)
-        {
-            attach_texture(attachment, GL_TEXTURE_2D, texture.texture(), level, target);
-        }
-
-        void attach_texture(GLenum attachment, GLenum texture_target, GLuint texture, GLint level,
-                            GLenum target = GL_FRAMEBUFFER)
-        {
-            glFramebufferTexture2D(target, attachment, texture_target, texture, level);
-        }
-
-    private:
-        explicit ModificationContext(Framebuffer& framebuffer) : m_framebuffer(framebuffer) {}
-
-        Framebuffer& m_framebuffer;
-    };
-
     Framebuffer() { glGenFramebuffers(1, &m_framebuffer); }
 
     // Never copy this!
@@ -57,8 +33,18 @@ public:
 
     void bind(GLenum target = GL_FRAMEBUFFER) { glBindFramebuffer(target, m_framebuffer); }
 
-    ModificationContext create_modification_context() { return ModificationContext(*this); }
+    template<GLenum TTextureName>
+    static void attach_texture(GLenum attachment, const Texture<GL_TEXTURE_2D, TTextureName>& texture, GLint level,
+                               GLenum target = GL_FRAMEBUFFER)
+    {
+        attach_texture(attachment, GL_TEXTURE_2D, texture.texture(), level, target);
+    }
 
+    static void attach_texture(GLenum attachment, GLenum texture_target, GLuint texture, GLint level,
+                               GLenum target = GL_FRAMEBUFFER)
+    {
+        glFramebufferTexture2D(target, attachment, texture_target, texture, level);
+    }
     template<typename Callback>
     void with_bound(Callback callback, GLenum target = GL_FRAMEBUFFER)
     {
@@ -74,7 +60,7 @@ public:
             }};
 
         bind(target);
-        callback(create_modification_context());
+        callback();
     }
 
 private:

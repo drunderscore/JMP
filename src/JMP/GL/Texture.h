@@ -15,29 +15,6 @@ template<GLenum TTarget, GLenum TName>
 class Texture
 {
 public:
-    class ModificationContext
-    {
-    public:
-        friend class Texture;
-
-        // NOTE: This check for GL_TEXTURE_2D is a bit incorrect, as glTexImage2D can be used with many other texture
-        //       targets.
-        void set_data(GLint level, GLint internal_format, GLsizei width, GLsizei height, GLenum format, GLenum type,
-                      const uint8_t& data)
-            requires(TTarget == GL_TEXTURE_2D)
-        {
-            glTexImage2D(TTarget, level, internal_format, width, height, 0, format, type, &data);
-        }
-
-        void set_parameter(GLenum name, GLint value) { glTexParameteri(TTarget, name, value); }
-        void set_parameter(GLenum name, GLfloat value) { glTexParameterf(TTarget, name, value); }
-
-    private:
-        explicit ModificationContext(Texture& texture) : m_texture(texture) {}
-
-        Texture& m_texture;
-    };
-
     Texture() { glGenTextures(1, &m_texture); }
 
     // Never copy this!
@@ -56,7 +33,17 @@ public:
 
     void bind() { glBindTexture(TTarget, m_texture); }
 
-    ModificationContext create_modification_context() { return ModificationContext(*this); }
+    // NOTE: This check for GL_TEXTURE_2D is a bit incorrect, as glTexImage2D can be used with many other texture
+    //       targets.
+    static void set_data(GLint level, GLint internal_format, GLsizei width, GLsizei height, GLenum format, GLenum type,
+                         const uint8_t& data)
+        requires(TTarget == GL_TEXTURE_2D)
+    {
+        glTexImage2D(TTarget, level, internal_format, width, height, 0, format, type, &data);
+    }
+
+    static void set_parameter(GLenum name, GLint value) { glTexParameteri(TTarget, name, value); }
+    static void set_parameter(GLenum name, GLfloat value) { glTexParameterf(TTarget, name, value); }
 
     template<typename Callback>
     void with_bound(Callback callback)
@@ -68,7 +55,7 @@ public:
             [previously_bound_texture]() { glBindTexture(TTarget, previously_bound_texture); }};
 
         bind();
-        callback(create_modification_context());
+        callback();
     }
 
 private:
