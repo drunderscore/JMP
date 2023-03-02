@@ -15,29 +15,29 @@ namespace JMP::GL
 class Framebuffer
 {
 public:
-    Framebuffer() { glGenFramebuffers(1, &m_framebuffer); }
+    Framebuffer() { glGenFramebuffers(1, &m_name); }
 
     // Never copy this!
     Framebuffer(const Framebuffer&) = delete;
 
     // ...but moving it is okay :)
-    Framebuffer(Framebuffer&& other) : m_framebuffer(other.framebuffer()) { other.m_framebuffer = 0; }
+    Framebuffer(Framebuffer&& other) : m_name(other.name()) { other.m_name = 0; }
 
     ~Framebuffer()
     {
-        if (m_framebuffer != 0)
-            glDeleteFramebuffers(1, &m_framebuffer);
+        if (m_name != 0)
+            glDeleteFramebuffers(1, &m_name);
     }
 
-    GLuint framebuffer() const { return m_framebuffer; }
+    GLuint name() const { return m_name; }
 
-    void bind(GLenum target = GL_FRAMEBUFFER) { glBindFramebuffer(target, m_framebuffer); }
+    void bind(GLenum target = GL_FRAMEBUFFER) { glBindFramebuffer(target, m_name); }
 
     template<GLenum TTextureName>
     static void attach_texture(GLenum attachment, const Texture<GL_TEXTURE_2D, TTextureName>& texture, GLint level,
                                GLenum target = GL_FRAMEBUFFER)
     {
-        attach_texture(attachment, GL_TEXTURE_2D, texture.texture(), level, target);
+        attach_texture(attachment, GL_TEXTURE_2D, texture.name(), level, target);
     }
 
     static void attach_texture(GLenum attachment, GLenum texture_target, GLuint texture, GLint level,
@@ -64,8 +64,8 @@ public:
     }
 
 private:
-    explicit Framebuffer(GLuint framebuffer) : m_framebuffer(framebuffer) {}
+    explicit Framebuffer(GLuint name) : m_name(name) {}
 
-    GLuint m_framebuffer{};
+    GLuint m_name{};
 };
 }

@@ -16,23 +16,23 @@ template<GLenum TTarget, GLenum TName>
 class Buffer
 {
 public:
-    Buffer() { glGenBuffers(1, &m_buffer); }
+    Buffer() { glGenBuffers(1, &m_name); }
 
     // Never copy this!
     Buffer(const Buffer&) = delete;
 
     // ...but moving it is okay :)
-    Buffer(Buffer&& other) : m_buffer(other.buffer()) { other.m_buffer = 0; }
+    Buffer(Buffer&& other) : m_name(other.name()) { other.m_name = 0; }
 
     ~Buffer()
     {
-        if (m_buffer != 0)
-            glDeleteBuffers(1, &m_buffer);
+        if (m_name != 0)
+            glDeleteBuffers(1, &m_name);
     }
 
-    GLuint buffer() const { return m_buffer; }
+    GLuint name() const { return m_name; }
 
-    void bind() { glBindBuffer(TTarget, m_buffer); }
+    void bind() { glBindBuffer(TTarget, m_name); }
 
     template<typename T>
     static void set_data(std::span<T> bytes, GLenum usage)
@@ -54,9 +54,9 @@ public:
     }
 
 private:
-    explicit Buffer(GLuint buffer) : m_buffer(buffer) {}
+    explicit Buffer(GLuint name) : m_name(name) {}
 
-    GLuint m_buffer{};
+    GLuint m_name{};
 };
 
 using ArrayBuffer = Buffer<GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING>;

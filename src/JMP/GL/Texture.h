@@ -15,23 +15,23 @@ template<GLenum TTarget, GLenum TName>
 class Texture
 {
 public:
-    Texture() { glGenTextures(1, &m_texture); }
+    Texture() { glGenTextures(1, &m_name); }
 
     // Never copy this!
     Texture(const Texture&) = delete;
 
     // ...but moving it is okay :)
-    Texture(Texture&& other) : m_texture(other.texture()) { other.m_texture = 0; }
+    Texture(Texture&& other) : m_name(other.name()) { other.m_name = 0; }
 
     ~Texture()
     {
-        if (m_texture != 0)
-            glDeleteTextures(1, &m_texture);
+        if (m_name != 0)
+            glDeleteTextures(1, &m_name);
     }
 
-    GLuint texture() const { return m_texture; }
+    GLuint name() const { return m_name; }
 
-    void bind() { glBindTexture(TTarget, m_texture); }
+    void bind() { glBindTexture(TTarget, m_name); }
 
     // NOTE: This check for GL_TEXTURE_2D is a bit incorrect, as glTexImage2D can be used with many other texture
     //       targets.
@@ -59,9 +59,9 @@ public:
     }
 
 private:
-    explicit Texture(GLuint texture) : m_texture(texture) {}
+    explicit Texture(GLuint name) : m_name(name) {}
 
-    GLuint m_texture{};
+    GLuint m_name{};
 };
 
 using Texture2D = Texture<GL_TEXTURE_2D, GL_TEXTURE_BINDING_2D>;

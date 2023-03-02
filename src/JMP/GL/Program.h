@@ -13,18 +13,18 @@ namespace JMP::GL
 class Program
 {
 public:
-    Program() : m_program(glCreateProgram()) {}
+    Program() : m_name(glCreateProgram()) {}
 
     // Never copy this!
     Program(const Program&) = delete;
 
     // ...but moving it is okay :)
-    Program(Program&& other) : m_program(other.program()) { other.m_program = 0; }
+    Program(Program&& other) : m_name(other.name()) { other.m_name = 0; }
 
     ~Program()
     {
-        if (m_program != 0)
-            glDeleteProgram(m_program);
+        if (m_name != 0)
+            glDeleteProgram(m_name);
     }
 
     static Program link_vertex_and_fragment_shaders(VertexShader& vertex_shader, FragmentShader& fragment_shader)
@@ -41,28 +41,28 @@ public:
     template<GLenum TShaderType>
     void attach_shader(const Shader<TShaderType>& shader)
     {
-        glAttachShader(m_program, shader.shader());
+        glAttachShader(m_name, shader.name());
     }
 
     void link()
     {
-        glLinkProgram(m_program);
+        glLinkProgram(m_name);
 
         GLint success{};
-        glGetProgramiv(program(), GL_LINK_STATUS, &success);
+        glGetProgramiv(name(), GL_LINK_STATUS, &success);
 
         // FIXME: Include info log string in exception
         if (!success)
             throw std::runtime_error("Failed to link program");
     }
 
-    void use() { glUseProgram(m_program); }
+    void use() { glUseProgram(m_name); }
 
-    GLuint program() const { return m_program; }
+    GLuint name() const { return m_name; }
 
 private:
-    explicit Program(GLuint program) : m_program(program) {}
+    explicit Program(GLuint name) : m_name(name) {}
 
-    GLuint m_program{};
+    GLuint m_name{};
 };
 }

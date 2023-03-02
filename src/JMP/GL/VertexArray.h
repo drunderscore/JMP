@@ -14,23 +14,23 @@ namespace JMP::GL
 class VertexArray
 {
 public:
-    VertexArray() { glGenVertexArrays(1, &m_vertex_array); }
+    VertexArray() { glGenVertexArrays(1, &m_name); }
 
     // Never copy this!
     VertexArray(const VertexArray&) = delete;
 
     // ...but moving it is okay :)
-    VertexArray(VertexArray&& other) : m_vertex_array(other.vertex_array()) { other.m_vertex_array = 0; }
+    VertexArray(VertexArray&& other) : m_name(other.name()) { other.m_name = 0; }
 
     ~VertexArray()
     {
-        if (m_vertex_array != 0)
-            glDeleteVertexArrays(1, &m_vertex_array);
+        if (m_name != 0)
+            glDeleteVertexArrays(1, &m_name);
     }
 
-    GLuint vertex_array() const { return m_vertex_array; }
+    GLuint name() const { return m_name; }
 
-    void bind() { glBindVertexArray(m_vertex_array); }
+    void bind() { glBindVertexArray(m_name); }
 
     template<typename Callback>
     void with_bound(Callback callback)
@@ -46,8 +46,8 @@ public:
     }
 
 private:
-    explicit VertexArray(GLuint vertex_array) : m_vertex_array(vertex_array) {}
+    explicit VertexArray(GLuint name) : m_name(name) {}
 
-    GLuint m_vertex_array{};
+    GLuint m_name{};
 };
 }

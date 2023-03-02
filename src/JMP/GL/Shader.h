@@ -27,15 +27,15 @@ public:
     Shader(const Self&) = delete;
 
     // ...but moving it is okay :)
-    Shader(Self&& other) : m_shader(other.shader()) { other.m_shader = 0; }
+    Shader(Self&& other) : m_name(other.name()) { other.m_name = 0; }
 
     ~Shader()
     {
-        if (m_shader != 0)
-            glDeleteShader(m_shader);
+        if (m_name != 0)
+            glDeleteShader(m_name);
     }
 
-    GLuint shader() const { return m_shader; }
+    GLuint name() const { return m_name; }
 
     static Self compile(std::string_view source_code)
     {
@@ -45,11 +45,11 @@ public:
         auto source_code_string = source_code.data();
         auto source_code_length = static_cast<GLint>(source_code.length());
 
-        glShaderSource(shader.shader(), 1, &source_code_string, &source_code_length);
-        glCompileShader(shader.shader());
+        glShaderSource(shader.name(), 1, &source_code_string, &source_code_length);
+        glCompileShader(shader.name());
 
         GLint success{};
-        glGetShaderiv(shader.shader(), GL_COMPILE_STATUS, &success);
+        glGetShaderiv(shader.name(), GL_COMPILE_STATUS, &success);
 
         // FIXME: Include info log string in exception
         if (!success)
@@ -76,9 +76,9 @@ public:
     }
 
 private:
-    explicit Shader(GLuint shader) : m_shader(shader) {}
+    explicit Shader(GLuint name) : m_name(name) {}
 
-    GLuint m_shader{};
+    GLuint m_name{};
 };
 
 using VertexShader = Shader<GL_VERTEX_SHADER>;
