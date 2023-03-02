@@ -17,9 +17,16 @@ class ScopeGuard
 public:
     ScopeGuard(Callback callback) : m_callback(std::move(callback)) {}
 
-    ~ScopeGuard() { m_callback(); }
+    void disarm() { m_is_armed = false; }
+
+    ~ScopeGuard()
+    {
+        if (m_is_armed)
+            m_callback();
+    }
 
 private:
     Callback m_callback;
+    bool m_is_armed = true;
 };
 }
