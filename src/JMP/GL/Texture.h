@@ -36,10 +36,10 @@ public:
     // NOTE: This check for GL_TEXTURE_2D is a bit incorrect, as glTexImage2D can be used with many other texture
     //       targets.
     static void set_data(GLint level, GLint internal_format, GLsizei width, GLsizei height, GLenum format, GLenum type,
-                         const uint8_t& data)
+                         const uint8_t* data)
         requires(TTarget == GL_TEXTURE_2D)
     {
-        glTexImage2D(TTarget, level, internal_format, width, height, 0, format, type, &data);
+        glTexImage2D(TTarget, level, internal_format, width, height, 0, format, type, data);
     }
 
     static void set_parameter(GLenum name, GLint value) { glTexParameteri(TTarget, name, value); }
