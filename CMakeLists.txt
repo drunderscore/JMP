@@ -23,3 +23,5 @@ if (${JMP_OPENGL})
     target_sources(JMP PRIVATE src/GLAD/src/gl.c)
     target_include_directories(JMP PUBLIC src/GLAD/include)
 endif ()
+
+set_target_properties(JMP PROPERTIES POSITION_INDEPENDENT_CODE ON)
