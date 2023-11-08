@@ -6,6 +6,7 @@
 
 #include "BitStream.h"
 #include "Stream.h"
+#include <cstddef>
 #include <stdexcept>
 
 namespace JMP
