@@ -6,8 +6,8 @@
 
 #include "BitStream.h"
 #include "Stream.h"
-#include <cstddef>
 #include <stdexcept>
+#include <stdint.h>
 
 namespace JMP
 {
@@ -46,7 +46,9 @@ void BitStream::write(bool value)
 
 void BitStream::seek(size_t offset, SeekOrigin seek_origin)
 {
-    ssize_t new_current_bit{};
+    // FIXME: This should be ssize_t, but Windows doesn't have that, so hopefully 64-bits is enough.
+    //        Windows does have SSIZE_T, so a typedef for that would be preferable.
+    int64_t new_current_bit{};
 
     switch (seek_origin)
     {
