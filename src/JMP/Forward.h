@@ -8,7 +8,6 @@
 
 namespace JMP
 {
-class BitStream;
 template<typename T>
 class DisjointSpan;
 class FileStream;

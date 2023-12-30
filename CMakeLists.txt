@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD 20)
 option(JMP_OPENGL "Compile with OpenGL support" OFF)
 
 add_library(JMP
-        src/JMP/BitStream.cpp
         src/JMP/FileStream.cpp
         src/JMP/Signature.cpp
         )
